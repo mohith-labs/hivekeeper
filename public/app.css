@@ -151,12 +151,19 @@ body {
   padding: 10px 14px; border-bottom: 1px solid var(--border);
 }
 
-.grid-wrap { flex: 1; overflow: auto; }
+/* Grid wrapper carries the gutter so the table edge is visible rather than
+   flush against the viewport. */
+.grid-wrap { flex: 1; overflow: auto; padding: 0 16px 16px 0; }
 
-table.grid { border-collapse: collapse; width: max-content; min-width: 100%; font-family: var(--mono); font-size: 12.5px; }
-/* The final column's right border sits at the table edge; without this the
-   grid looks unterminated when it meets the viewport edge. */
+/* width:max-content sizes columns to their content instead of stretching one
+   column to fill the pane, and lets the table terminate with a visible edge. */
+table.grid {
+  border-collapse: collapse; width: max-content;
+  font-family: var(--mono); font-size: 12.5px;
+  border: 1px solid var(--border); border-radius: 6px;
+}
 table.grid th:last-child, table.grid td:last-child { border-right: none; }
+table.grid tr:last-child td { border-bottom: none; }
 table.grid th {
   position: sticky; top: 0; z-index: 1;
   background: var(--bg-3); text-align: left;
@@ -182,7 +189,8 @@ td.null { color: var(--fg-dim); font-style: italic; }
   width: 100%; display: block;
 }
 
-.query-results { flex: 1; overflow: auto; }
+.query-results { flex: 1; overflow: auto; padding: 0 16px 16px 0; }
+.query-results table.grid { margin-left: 14px; }
 
 .result-meta {
   padding: 8px 14px; border-bottom: 1px solid var(--border);
