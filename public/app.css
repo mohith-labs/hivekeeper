@@ -125,7 +125,7 @@ body {
 .tab:hover { color: var(--fg); }
 .tab.active { background: var(--bg-3); color: var(--fg); border-color: var(--border); }
 
-.pane { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.pane { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column; }
 
 /* ---------------------------------------------------------- browse */
 
@@ -154,6 +154,9 @@ body {
 .grid-wrap { flex: 1; overflow: auto; }
 
 table.grid { border-collapse: collapse; width: max-content; min-width: 100%; font-family: var(--mono); font-size: 12.5px; }
+/* The final column's right border sits at the table edge; without this the
+   grid looks unterminated when it meets the viewport edge. */
+table.grid th:last-child, table.grid td:last-child { border-right: none; }
 table.grid th {
   position: sticky; top: 0; z-index: 1;
   background: var(--bg-3); text-align: left;
@@ -176,6 +179,7 @@ td.null { color: var(--fg-dim); font-style: italic; }
   background: var(--bg-2); color: var(--fg);
   border: none; border-bottom: 1px solid var(--border);
   padding: 14px; font-family: var(--mono); font-size: 13px; outline: none;
+  width: 100%; display: block;
 }
 
 .query-results { flex: 1; overflow: auto; }

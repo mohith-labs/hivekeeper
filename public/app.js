@@ -146,6 +146,8 @@ function renderConnections() {
     // Use textContent for user data so a connection name can't inject markup.
     li.querySelector('.conn-name').textContent = c.name;
     li.querySelector('.conn-sub').textContent = target;
+    // Names and hostnames are ellipsis-truncated; expose the full value on hover.
+    li.title = `${c.name}\n${c.engine} · ${target}`;
 
     li.addEventListener('click', (e) => {
       const act = e.target.dataset.act;
