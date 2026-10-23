@@ -414,3 +414,22 @@ input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline
   #sql { height: 90px; }
   .modal { padding-top: 14px; }
 }
+
+/* A landscape phone is wider than the 760px breakpoint, so the touch rules
+   above never fire there even though it is still a finger-driven device.
+   Key off the input device rather than width so coarse pointers always get
+   44px targets and the layout still carries notch insets in landscape. */
+@media (pointer: coarse) {
+  .tab, .btn.small, .data-head .btn, .back-btn, .query-head .btn {
+    min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .menu-btn { min-width: 44px; min-height: 44px; }
+  .conn-item { min-height: 44px; }
+  .table-list li { min-height: 44px; display: flex; align-items: center;
+                   justify-content: space-between; }
+  .table-list li .cnt { float: none; }
+  /* Rotating to landscape puts the notch on a side edge. */
+  .topbar { padding-left: max(12px, env(safe-area-inset-left));
+            padding-right: max(12px, env(safe-area-inset-right)); }
+  .grid-wrap, .query-results { padding-bottom: env(safe-area-inset-bottom); }
+}
