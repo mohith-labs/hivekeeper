@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Hivekeeper</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>" />
+<link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+
+<div id="gate" class="gate hidden">
+  <form class="gate-card" id="gate-form">
+    <div class="gate-logo">🐝</div>
+    <h1>Hivekeeper</h1>
+    <p class="muted">This instance is password protected.</p>
+    <input type="password" id="gate-password" placeholder="Password" autocomplete="current-password" />
+    <button type="submit" class="btn primary">Unlock</button>
+    <div class="error" id="gate-error"></div>
+  </form>
+</div>
+
+<div id="app" class="layout hidden">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">🐝</span>
+      <span class="brand-name">Hivekeeper</span>
+    </div>
+
+    <button class="btn primary full" id="new-connection">+ New connection</button>
+
+    <div class="section-label">Connections</div>
+    <ul class="conn-list" id="conn-list"></ul>
+
+    <div class="sidebar-foot">
+      <div class="muted tiny">Connections are stored in this browser only.</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="empty" id="empty-state">
+      <div class="empty-mark">🐝</div>
+      <h2>No connection selected</h2>
+      <p class="muted">Create a connection to start browsing your databases.</p>
+    </div>
+
+    <div class="workspace hidden" id="workspace">
+      <header class="topbar">
+        <div class="topbar-left">
+          <strong id="active-name"></strong>
+          <span class="badge" id="active-engine"></span>
+          <span class="muted tiny" id="active-target"></span>
+        </div>
+        <div class="tabs">
+          <button class="tab active" data-tab="browse">Browse</button>
+          <button class="tab" data-tab="query">Query</button>
+        </div>
+      </header>
+
+      <section class="pane" id="pane-browse">
+        <div class="browse-split">
+          <div class="table-list">
+            <input type="search" id="table-filter" placeholder="Filter tables…" />
+            <ul id="tables"></ul>
+          </div>
+          <div class="table-data">
+            <div class="data-head">
+              <span id="data-title" class="muted">Select a table</span>
+              <span class="spacer"></span>
+              <span class="muted tiny" id="row-info"></span>
+              <button class="btn ghost small" id="prev-page" disabled>‹ Prev</button>
+              <button class="btn ghost small" id="next-page" disabled>Next ›</button>
+            </div>
+            <div class="grid-wrap" id="grid-wrap">
+              <div class="muted pad">No table selected.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pane hidden" id="pane-query">
+        <div class="query-head">
+          <span class="muted tiny" id="query-hint"></span>
+          <span class="spacer"></span>
+          <button class="btn primary small" id="run-query">Run ▶</button>
+        </div>
+        <textarea id="sql" spellcheck="false" placeholder="SELECT * FROM users LIMIT 10;"></textarea>
+        <div class="query-results" id="query-results">
+          <div class="muted pad">Results will appear here.</div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop hidden" id="modal">
+  <form class="modal" id="conn-form">
+    <h2 id="modal-title">New connection</h2>
+
+    <label>Name
+      <input id="f-name" placeholder="My database" required />
+    </label>
+
+    <label>Engine
+      <select id="f-engine"></select>
+    </label>
+
+    <div class="row">
+      <label class="grow">Host
+        <input id="f-host" placeholder="my-db-container" required />
+      </label>
+      <label class="port">Port
+        <input id="f-port" type="number" />
+      </label>
+    </div>
+
+    <div class="row">
+      <label class="grow">User
+        <input id="f-user" autocomplete="off" />
+      </label>
+      <label class="grow">Password
+        <input id="f-password" type="password" autocomplete="new-password" />
+      </label>
+    </div>
+
+    <label>Database <span class="muted tiny" id="db-hint"></span>
+      <input id="f-database" />
+    </label>
+
+    <label class="check">
+      <input type="checkbox" id="f-ssl" /> Use SSL
+    </label>
+
+    <div class="error" id="form-error"></div>
+    <div class="test-ok" id="form-ok"></div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" id="cancel">Cancel</button>
+      <button type="button" class="btn" id="test-conn">Test</button>
+      <button type="submit" class="btn primary">Save</button>
+    </div>
+  </form>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
