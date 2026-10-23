@@ -288,7 +288,16 @@ input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline
    full viewport width instead of the ~50px a 3-column layout would leave. */
 @media (max-width: 760px) {
   .menu-btn { display: inline-flex; align-items: center; justify-content: center;
-              font-size: 18px; padding: 4px 8px; flex-shrink: 0; }
+              font-size: 18px; flex-shrink: 0;
+              min-width: 44px; min-height: 44px; padding: 4px 8px; }
+
+  /* The top bar is the first painted row, so on notched phones it must carry
+     the status-bar inset itself or the title sits under the clock. */
+  .topbar { gap: 8px; flex-shrink: 0;
+            padding: 10px 12px;
+            padding-top: calc(10px + env(safe-area-inset-top));
+            padding-left: max(12px, env(safe-area-inset-left));
+            padding-right: max(12px, env(safe-area-inset-right)); }
 
   .sidebar {
     position: fixed; top: 0; left: 0; bottom: 0; z-index: 30;
@@ -303,13 +312,14 @@ input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline
   /* Keep the connection name readable; hover-reveal never fires on touch. */
   .conn-actions { opacity: 1; }
 
-  .topbar { gap: 8px; padding: 10px 12px; }
   /* The host string is the first thing worth dropping when space is tight. */
   #active-target { display: none; }
   .topbar-left { flex: 1; overflow: hidden; }
   #active-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tabs { margin-left: 0; flex-shrink: 0; }
-  .tab { padding: 6px 10px; }
+  /* 44px is the Apple/Android minimum; the visual pill stays compact while the
+     hit area is padded out to meet it. */
+  .tab { padding: 6px 10px; min-height: 44px; display: inline-flex; align-items: center; }
 
   /* Two-step browse: table list fills the pane, data slides in over it. */
   .browse-split { position: relative; }
@@ -334,13 +344,20 @@ input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline
   #data-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .data-head .spacer { display: none; }
   .data-head .btn { flex-shrink: 0; }
+  /* Prev/Next sit adjacent, so undersized targets cause mis-taps between them. */
+  .data-head .btn, .back-btn { min-height: 44px; display: inline-flex; align-items: center; }
+
+  /* Bottom inset so the last grid row clears the iOS home indicator. */
+  .grid-wrap { padding-bottom: env(safe-area-inset-bottom); }
 
   .grid-wrap > table.grid, .query-results table.grid { margin: 0 12px 12px 12px; }
   /* Long values should not force a wide horizontal scroll on a phone. */
   table.grid td { max-width: 60vw; }
 
   .query-head { padding: 10px 12px; }
-  #sql { height: 150px; padding: 12px; }
+  .query-head .btn { min-height: 44px; }
+  #sql { height: 150px; padding: 12px; font-size: 16px; }
+  .query-results { padding-bottom: env(safe-area-inset-bottom); }
 
   /* Full-bleed sheet reads as native on a phone; 16px font stops iOS zoom. */
   .modal {
@@ -368,12 +385,21 @@ input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline
   .modal-actions .btn { flex: 1; padding: 13px 14px; min-height: 44px; }
 
   .gate-card { width: 100%; max-width: 340px; margin: 0 16px; padding: 28px 22px; }
-  .gate-card input { font-size: 16px; padding: 10px 12px; }
+  .gate-card input { font-size: 16px; padding: 10px 12px; min-height: 44px; }
+  .gate-card .btn { min-height: 44px; }
 
-  /* Touch targets: 36px+ so taps land reliably. */
-  .conn-item { padding: 11px 10px; }
-  .table-list li { padding: 10px 8px; font-size: 14px; }
+  /* Drawer is flush to all three edges, so it carries its own insets. */
+  .sidebar { padding-top: max(16px, env(safe-area-inset-top));
+             padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+
+  /* Touch targets: 44px so taps land reliably. */
+  .conn-item { padding: 11px 10px; min-height: 44px; }
+  .table-list li { padding: 10px 8px; font-size: 14px; min-height: 44px; display: flex;
+                   align-items: center; justify-content: space-between; }
+  .table-list li .cnt { float: none; }
+  .table-list input { font-size: 16px; min-height: 44px; }
   .btn.small { padding: 7px 11px; }
+  .conn-item .icon-btn { min-width: 36px; min-height: 36px; }
 }
 
 /* Very narrow: drop the wordmark so the hamburger and tabs always fit. */
