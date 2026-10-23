@@ -9,6 +9,8 @@ Built to browse databases that live on a private Docker network — like those h
 > Hivekeeper is an independent project, **not a fork**, and shares no source code with it.
 > See [NOTICE.md](./NOTICE.md) for full credit.
 
+![Hivekeeper browsing a PostgreSQL table](./docs/screenshot.png)
+
 ---
 
 ## Why this exists
