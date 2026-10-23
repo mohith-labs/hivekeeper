@@ -26,6 +26,12 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Off-canvas panels (drawer, sliding data pane) sit outside the viewport and
+   still extend the document's scroll width. overflow:hidden on <body> alone
+   does not clip them when <html> is the scrolling element, which lets a swipe
+   drag the whole page sideways into empty space. */
+html { overflow: hidden; width: 100%; }
+
 .hidden { display: none !important; }
 .muted { color: var(--fg-dim); }
 .tiny { font-size: 12px; }
@@ -322,7 +328,7 @@ input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline
   .tab { padding: 6px 10px; min-height: 44px; display: inline-flex; align-items: center; }
 
   /* Two-step browse: table list fills the pane, data slides in over it. */
-  .browse-split { position: relative; }
+  .browse-split { position: relative; overflow-x: hidden; }
   .table-list {
     width: 100%; border-right: none;
     position: absolute; inset: 0; z-index: 1;
