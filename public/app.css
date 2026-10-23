@@ -151,9 +151,10 @@ body {
   padding: 10px 14px; border-bottom: 1px solid var(--border);
 }
 
-/* Grid wrapper carries the gutter so the table edge is visible rather than
-   flush against the viewport. */
-.grid-wrap { flex: 1; overflow: auto; padding: 0 16px 16px 0; }
+/* Gutter lives on the scroll wrapper's inner content, not the wrapper itself,
+   so sibling strips (toolbar, status) keep a consistent right edge. */
+.grid-wrap { flex: 1; overflow: auto; }
+.grid-wrap > table.grid { margin: 0 16px 16px 14px; }
 
 /* width:max-content sizes columns to their content instead of stretching one
    column to fill the pane, and lets the table terminate with a visible edge. */
@@ -189,8 +190,8 @@ td.null { color: var(--fg-dim); font-style: italic; }
   width: 100%; display: block;
 }
 
-.query-results { flex: 1; overflow: auto; padding: 0 16px 16px 0; }
-.query-results table.grid { margin-left: 14px; }
+.query-results { flex: 1; overflow: auto; }
+.query-results table.grid { margin: 0 16px 16px 14px; }
 
 .result-meta {
   padding: 8px 14px; border-bottom: 1px solid var(--border);
