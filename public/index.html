@@ -22,7 +22,10 @@
 
 <div id="app" class="layout hidden">
 
-  <aside class="sidebar">
+  <!-- Dims the page behind the connections drawer on narrow screens. -->
+  <div class="drawer-backdrop hidden" id="drawer-backdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <span class="brand-mark">🐝</span>
       <span class="brand-name">Hivekeeper</span>
@@ -47,6 +50,8 @@
 
     <div class="workspace hidden" id="workspace">
       <header class="topbar">
+        <!-- Only rendered on narrow screens; opens the connections drawer. -->
+        <button class="icon-btn menu-btn" id="menu-btn" aria-label="Open connections" aria-expanded="false">☰</button>
         <div class="topbar-left">
           <strong id="active-name"></strong>
           <span class="badge" id="active-engine"></span>
@@ -59,13 +64,15 @@
       </header>
 
       <section class="pane" id="pane-browse">
-        <div class="browse-split">
-          <div class="table-list">
+        <div class="browse-split" id="browse-split">
+          <div class="table-list" id="table-list">
             <input type="search" id="table-filter" placeholder="Filter tables…" />
             <ul id="tables"></ul>
           </div>
           <div class="table-data">
             <div class="data-head">
+              <!-- Narrow screens only: returns from the data grid to the table list. -->
+              <button class="btn ghost small back-btn" id="back-to-tables">‹ Tables</button>
               <span id="data-title" class="muted">Select a table</span>
               <span class="spacer"></span>
               <span class="muted tiny" id="row-info"></span>

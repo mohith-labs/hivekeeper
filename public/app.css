@@ -20,7 +20,10 @@ body {
   background: var(--bg);
   color: var(--fg);
   height: 100vh;
+  /* dvh tracks mobile browser chrome (URL bar) so the layout never overflows. */
+  height: 100dvh;
   overflow: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 .hidden { display: none !important; }
@@ -34,6 +37,8 @@ body {
 .gate {
   display: flex; align-items: center; justify-content: center;
   height: 100vh;
+  height: 100dvh;
+  padding: 16px;
 }
 .gate-card {
   background: var(--bg-2);
@@ -49,7 +54,7 @@ body {
 
 /* ---------------------------------------------------------- layout */
 
-.layout { display: flex; height: 100vh; }
+.layout { display: flex; height: 100vh; height: 100dvh; }
 
 .sidebar {
   width: 260px;
@@ -246,7 +251,105 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--fg-dim); }
 
+/* ------------------------------------------------------- responsive */
+
+/* Hamburger and "‹ Tables" exist only in the narrow layout. */
+.menu-btn, .back-btn { display: none; }
+
+.drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 29;
+}
+
+/* Tablet: reclaim horizontal space before switching to drawers. */
+@media (max-width: 1024px) {
+  .sidebar { width: 210px; }
+  .table-list { width: 190px; }
+}
+
+/* Phone / small tablet: sidebar becomes an off-canvas drawer and the
+   browse pane becomes a two-step list -> data flow, so the grid gets the
+   full viewport width instead of the ~50px a 3-column layout would leave. */
 @media (max-width: 760px) {
-  .sidebar { width: 190px; }
-  .table-list { width: 150px; }
+  .menu-btn { display: inline-flex; align-items: center; justify-content: center;
+              font-size: 18px; padding: 4px 8px; flex-shrink: 0; }
+
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 30;
+    width: 82vw; max-width: 320px;
+    transform: translateX(-100%);
+    transition: transform .22s ease;
+    /* Respect notches when the drawer is flush to the screen edge. */
+    padding-left: max(16px, env(safe-area-inset-left));
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  /* Keep the connection name readable; hover-reveal never fires on touch. */
+  .conn-actions { opacity: 1; }
+
+  .topbar { gap: 8px; padding: 10px 12px; }
+  /* The host string is the first thing worth dropping when space is tight. */
+  #active-target { display: none; }
+  .topbar-left { flex: 1; overflow: hidden; }
+  #active-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tabs { margin-left: 0; flex-shrink: 0; }
+  .tab { padding: 6px 10px; }
+
+  /* Two-step browse: table list fills the pane, data slides in over it. */
+  .browse-split { position: relative; }
+  .table-list {
+    width: 100%; border-right: none;
+    position: absolute; inset: 0; z-index: 1;
+  }
+  .table-data {
+    position: absolute; inset: 0; z-index: 2;
+    background: var(--bg);
+    transform: translateX(100%);
+    transition: transform .22s ease;
+  }
+  .browse-split.show-data .table-data { transform: translateX(0); }
+  .back-btn { display: inline-flex; flex-shrink: 0; }
+
+  .data-head { padding: 10px 12px; gap: 6px; flex-wrap: wrap; }
+  /* Row count is redundant next to Prev/Next when space is scarce. */
+  #row-info { display: none; }
+  #data-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .grid-wrap > table.grid, .query-results table.grid { margin: 0 12px 12px 12px; }
+  /* Long values should not force a wide horizontal scroll on a phone. */
+  table.grid td { max-width: 60vw; }
+
+  .query-head { padding: 10px 12px; }
+  #sql { height: 150px; padding: 12px; }
+
+  /* Full-bleed sheet reads as native on a phone; 16px font stops iOS zoom. */
+  .modal {
+    width: 100%; height: 100%; max-height: 100%;
+    border-radius: 0; border: none;
+    padding: 20px max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  }
+  .modal input, .modal select { font-size: 16px; padding: 10px 12px; }
+  .modal-actions { position: sticky; bottom: 0; background: var(--bg-2);
+                   padding-top: 12px; margin-top: auto; }
+  .modal-actions .btn { flex: 1; padding: 11px 14px; }
+
+  .gate-card { width: 100%; max-width: 340px; margin: 0 16px; padding: 28px 22px; }
+  .gate-card input { font-size: 16px; padding: 10px 12px; }
+
+  /* Touch targets: 36px+ so taps land reliably. */
+  .conn-item { padding: 11px 10px; }
+  .table-list li { padding: 10px 8px; font-size: 14px; }
+  .btn.small { padding: 7px 11px; }
+}
+
+/* Very narrow: drop the wordmark so the hamburger and tabs always fit. */
+@media (max-width: 400px) {
+  .brand-name { font-size: 15px; }
+  .tab { padding: 6px 8px; font-size: 12px; }
+  table.grid td { max-width: 50vw; }
+}
+
+/* Landscape phones are short, not narrow: reclaim vertical space. */
+@media (max-height: 460px) and (max-width: 900px) {
+  #sql { height: 90px; }
+  .modal { padding-top: 14px; }
 }
