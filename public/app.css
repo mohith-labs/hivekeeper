@@ -148,13 +148,13 @@ body {
 .table-data { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 .data-head {
   display: flex; align-items: center; gap: 8px;
-  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  padding: 10px 16px; border-bottom: 1px solid var(--border);
 }
 
 /* Gutter lives on the scroll wrapper's inner content, not the wrapper itself,
    so sibling strips (toolbar, status) keep a consistent right edge. */
 .grid-wrap { flex: 1; overflow: auto; }
-.grid-wrap > table.grid { margin: 0 16px 16px 14px; }
+.grid-wrap > table.grid { margin: 0 16px 16px 16px; }
 
 /* width:max-content sizes columns to their content instead of stretching one
    column to fill the pane, and lets the table terminate with a visible edge. */
@@ -180,21 +180,21 @@ td.null { color: var(--fg-dim); font-style: italic; }
 
 /* ---------------------------------------------------------- query */
 
-.query-head { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+.query-head { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
 
 #sql {
   height: 190px; resize: vertical;
   background: var(--bg-2); color: var(--fg);
   border: none; border-bottom: 1px solid var(--border);
-  padding: 14px; font-family: var(--mono); font-size: 13px; outline: none;
+  padding: 14px 16px; font-family: var(--mono); font-size: 13px; outline: none;
   width: 100%; display: block;
 }
 
 .query-results { flex: 1; overflow: auto; }
-.query-results table.grid { margin: 0 16px 16px 14px; }
+.query-results table.grid { margin: 0 16px 16px 16px; }
 
 .result-meta {
-  padding: 8px 14px; border-bottom: 1px solid var(--border);
+  padding: 8px 16px; border-bottom: 1px solid var(--border);
   color: var(--fg-dim); font-size: 12px; background: var(--bg-2);
 }
 
