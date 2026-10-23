@@ -187,9 +187,42 @@ function renderTables() {
       span.textContent = t.approxRows;
       li.appendChild(span);
     }
-    li.addEventListener('click', () => openTable(t));
+    li.addEventListener('click', () => { openTable(t); showTableData(); });
     ul.appendChild(li);
   }
+}
+
+/* ---------------------------------------------------------- responsive
+
+   The narrow layout (<=760px) turns the sidebar into an off-canvas drawer and
+   splits Browse into two steps: table list, then data. These helpers drive the
+   classes those breakpoints key off. isNarrow() is checked at call time rather
+   than cached so rotating a phone takes effect immediately.
+*/
+
+const NARROW_QUERY = '(max-width: 760px)';
+function isNarrow() { return window.matchMedia(NARROW_QUERY).matches; }
+
+function openDrawer() {
+  $('#sidebar').classList.add('open');
+  $('#drawer-backdrop').classList.remove('hidden');
+  $('#menu-btn').setAttribute('aria-expanded', 'true');
+}
+
+function closeDrawer() {
+  $('#sidebar').classList.remove('open');
+  $('#drawer-backdrop').classList.add('hidden');
+  $('#menu-btn').setAttribute('aria-expanded', 'false');
+}
+
+/* Slide the data pane in over the table list (narrow only). */
+function showTableData() {
+  if (isNarrow()) $('#browse-split').classList.add('show-data');
+}
+
+/* Return to the table list. */
+function showTableList() {
+  $('#browse-split').classList.remove('show-data');
 }
 
 function renderGrid(target, payload) {
@@ -245,6 +278,11 @@ async function selectConnection(id) {
   state.activeTable = null;
   state.tables = [];
   state.offset = 0;
+
+  // Picking a connection is the drawer's purpose; dismiss it and return the
+  // browse pane to step one so the new connection opens on its table list.
+  closeDrawer();
+  showTableList();
 
   const conn = activeConnection();
   if (!conn) return;
@@ -495,6 +533,24 @@ function wireEvents() {
 
   $('#modal').addEventListener('click', (e) => {
     if (e.target.id === 'modal') closeModal();
+  });
+
+  // --- narrow-layout controls ---
+  $('#menu-btn').addEventListener('click', () => {
+    if ($('#sidebar').classList.contains('open')) closeDrawer(); else openDrawer();
+  });
+  $('#drawer-backdrop').addEventListener('click', closeDrawer);
+  $('#back-to-tables').addEventListener('click', showTableList);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  // Leaving the narrow breakpoint (rotation, desktop resize) must clear the
+  // drawer and two-step state, or the restored layout inherits stale classes
+  // and renders with the sidebar translated off-screen.
+  window.matchMedia(NARROW_QUERY).addEventListener('change', (e) => {
+    if (!e.matches) { closeDrawer(); showTableList(); }
   });
 }
 
